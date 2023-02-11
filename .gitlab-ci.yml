@@ -5,8 +5,7 @@ stages:
 
 variables:
   RUNNER_TAGS: dev
-  ECR: 632296647497.dkr.ecr.eu-central-1.amazonaws.com
-  APP: gitlab-ci-ecs
+  REPOSITORY: 632296647497.dkr.ecr.eu-central-1.amazonaws.com/gitlab-ci-ecs
 
 build-push:
   stage: build
@@ -22,6 +21,6 @@ build-push:
   script:
     - cd app
     - aws ecr get-login-password | docker login --username AWS --password-stdin $ECR
-    - docker build --tag $ECR/$APP:$CI_COMMIT_SHORT_SHA --tag $ECR/$APP:latest .
-    - docker push $ECR/$APP:$CI_COMMIT_SHORT_SHA
-    - docker push $ECR/$APP:latest
+    - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
+    - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
+    - docker push $REPOSITORY:latest
