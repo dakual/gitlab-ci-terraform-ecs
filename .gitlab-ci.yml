@@ -26,3 +26,16 @@ build-push:
     - docker push $REPOSITORY:latest
   tags:
     - ${RUNNER_TAGS}
+
+build-push2:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - apk add --no-cache py-pip
+    - pip install awscli
+    - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
+    - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
+    - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
+    - docker push $REPOSITORY:latest
