@@ -9,26 +9,6 @@ variables:
 
 build-push:
   stage: build
-  image: 
-    name: amazon/aws-cli
-    entrypoint: [""]
-  services:
-    - docker:dind
-  before_script:
-    - amazon-linux-extras install docker
-    - aws --version
-    - docker --version
-  script:
-    - cd app
-    - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
-    - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
-    - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
-    - docker push $REPOSITORY:latest
-  tags:
-    - ${RUNNER_TAGS}
-
-build-push2:
-  stage: build
   image: docker:latest
   services:
     - docker:dind
@@ -36,6 +16,10 @@ build-push2:
     - apk add --no-cache py-pip
     - pip install awscli
     - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
+  script:
+    - cd app
     - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
     - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
     - docker push $REPOSITORY:latest
+  tags:
+    - ${RUNNER_TAGS}
