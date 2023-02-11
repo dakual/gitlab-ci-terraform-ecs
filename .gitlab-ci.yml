@@ -1,0 +1,27 @@
+---
+stages:
+  - build
+  - apply
+
+variables:
+  RUNNER_TAGS: dev
+  ECR: 632296647497.dkr.ecr.eu-central-1.amazonaws.com
+  APP: gitlab-ci-ecs
+
+build-push:
+  stage: build
+  image: 
+    name: amazon/aws-cli
+    entrypoint: [""]
+  services:
+    - docker:dind
+  before_script:
+    - amazon-linux-extras install docker
+    - aws --version
+    - docker --version
+  script:
+    - cd app
+    - aws ecr get-login-password | docker login --username AWS --password-stdin $ECR
+    - docker build --tag $ECR/$APP:$CI_COMMIT_SHORT_SHA --tag $ECR/$APP:latest .
+    - docker push $ECR/$APP:$CI_COMMIT_SHORT_SHA
+    - docker push $ECR/$APP:latest
