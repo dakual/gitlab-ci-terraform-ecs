@@ -3,8 +3,8 @@ include:
     ref: main
     file: "ci-templates/terraform.yml"
 
-"Application":
-  stage: apply
+"Application Deployment":
+  stage: deploy
   when: manual
   trigger:
     strategy: depend
