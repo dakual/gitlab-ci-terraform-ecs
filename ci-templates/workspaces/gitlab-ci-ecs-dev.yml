@@ -1,52 +1,17 @@
-.dev:cluster:
+.dev:
   variables:
     TF_WORKSPACE: gitlab-ci-ecs-dev
 
-.dev:cluster:rw:
-  extends: .dev:cluster
+.dev:rw:
+  extends: .dev
   variables:
     AWS_ACCESS_KEY_ID: ${DEV_AWS_ACCESS_KEY_ID}
     AWS_SECRET_ACCESS_KEY: ${DEV_AWS_SECRET_ACCESS_KEY}
 
-.dev:cluster:ro:
-  extends: .dev:cluster
+.dev:ro:
+  extends: .dev
   variables:
     AWS_ACCESS_KEY_ID: ${DEV_RO_AWS_ACCESS_KEY_ID}
     AWS_SECRET_ACCESS_KEY: ${DEV_RO_AWS_ACCESS_KEY_SECRET}
   
-dev:cluster:validate:
-  extends: 
-    - .dev:cluster:ro
-    - .terraform:validate
-  when: on_success
 
-dev:cluster:plan:
-  extends: 
-    - .dev:cluster:ro
-    - .terraform:plan
-  needs:
-    - dev:cluster:validate
-  when: on_success
-
-dev:cluster:apply:
-  extends: 
-    - .dev:cluster:rw
-    - .terraform:apply
-  needs:
-    - dev:cluster:plan
-  when: manual
-
-dev:cluster:destroy-plan:
-  extends: 
-    - .dev:cluster:ro
-    - .terraform:destroy-plan
-  when: manual
-
-dev:cluster:destroy-apply:
-  extends:
-    - .dev:cluster:rw
-    - .terraform:destroy-apply
-  needs:
-    - dev:cluster:destroy-plan
-  when: manual
-  

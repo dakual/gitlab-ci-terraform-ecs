@@ -45,8 +45,10 @@ stages:
   - deploy
 
 
-.terraform:validate:
-  extends: .terraform
+dev:infra:validate:
+  extends: 
+    - .dev:ro
+    - .terraform
   stage: infra:validate
   tags:
     - ${RUNNER_TAGS}
@@ -54,8 +56,10 @@ stages:
     - terraform validate
 
 
-.terraform:plan:
-  extends: .terraform
+dev:infra:plan:
+  extends: 
+    - .dev:ro
+    - .terraform
   stage: infra:plan
   tags:
     - ${RUNNER_TAGS}
@@ -68,10 +72,14 @@ stages:
     paths:
       - infra/${PLAN}
   resource_group: ${TF_WORKSPACE}
+  needs:
+    - dev:infra:validate
 
 
-.terraform:apply:
-  extends: .terraform
+dev:infra:apply:
+  extends: 
+    - .dev:rw
+    - .terraform
   stage: infra:apply
   tags:
     - ${RUNNER_TAGS}
@@ -88,20 +96,29 @@ stages:
   resource_group: ${TF_WORKSPACE}
   environment:
     name: ${TF_WORKSPACE}
+  needs:
+    - dev:infra:plan
 
 
-.terraform:destroy-plan:
-  extends: .terraform:plan
+dev:infra:destroy-plan:
+  extends: 
+    - .dev:ro
+    - .terraform   
   script:
     - terraform plan -destroy -out=$PLAN
   when: manual
 
 
-.terraform:destroy-apply:
-  extends: .terraform:apply
+dev:infra:destroy-apply:
+  extends:
+    - .dev:rw
+    - .terraform
   script:
     - terraform apply -destroy $PLAN
+  needs:
+    - dev:infra:destroy-plan
   when: manual
   rules:
     - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
       when: never
+  
