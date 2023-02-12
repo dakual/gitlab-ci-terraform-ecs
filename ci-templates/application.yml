@@ -52,7 +52,7 @@ stages:
 cache:
   key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
   paths:
-    - node_modules/
+    - app/node_modules/
 
 
 "Build Application":
