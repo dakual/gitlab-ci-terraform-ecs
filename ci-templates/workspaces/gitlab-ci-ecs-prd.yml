@@ -39,7 +39,7 @@ prd:infra:destroy-plan:
     - .prd:ro
     - .terraform:destroy-plan
   needs:
-    - dev:infra:validate
+    - prd:infra:validate
   when: manual
 
 prd:infra:destroy-apply:
