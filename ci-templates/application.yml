@@ -1,23 +1,71 @@
-stages:
-  - build
-  - apply
+# stages:
+#   - build
+#   - apply
+
+# variables:
+#   RUNNER_TAGS: dev
+#   REPOSITORY: 632296647497.dkr.ecr.eu-central-1.amazonaws.com/gitlab-ci-ecs
+
+# "Build container":
+#   stage: build
+#   image: docker:latest
+#   services:
+#     - docker:dind
+#   before_script:
+#     - apk add --no-cache aws-cli
+#     - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
+#   script:
+#     - cd app
+#     - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
+#     - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
+#     - docker push $REPOSITORY:latest
+#   tags:
+#     - ${RUNNER_TAGS}
+
+include:
+  - local: 'ci-templates/workspaces/*.yml'
+
 
 variables:
   RUNNER_TAGS: dev
-  REPOSITORY: 632296647497.dkr.ecr.eu-central-1.amazonaws.com/gitlab-ci-ecs
 
-"Build container":
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
+
+stages:
+  - build
+  - test
+  - package
+  - release
+  - deploy
+  - deploy:dev
+  - deploy:prd
+
+
+.non-release: &non-release
   before_script:
-    - apk add --no-cache aws-cli
-    - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
-  script:
     - cd app
-    - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
-    - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
-    - docker push $REPOSITORY:latest
+  rules:
+    - changes: 
+        - app/**/*
+    - if: $CI_PIPELINE_SOURCE == "web"
   tags:
     - ${RUNNER_TAGS}
+cache:
+  key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
+  paths:
+    - node_modules/
+
+
+"Build Application":
+  <<: *non-release 
+  image: node:8.11-alpine
+  stage: build
+  script:
+    - npm install
+
+
+"Test Application":
+  <<: *non-release 
+  stage: test
+  image: node:8.11-alpine
+  script:
+    - npm run test
