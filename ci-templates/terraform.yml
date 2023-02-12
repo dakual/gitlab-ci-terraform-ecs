@@ -107,6 +107,3 @@ stages:
   script:
     - terraform apply -destroy $PLAN
   when: manual
-  rules:
-    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
-      when: never
