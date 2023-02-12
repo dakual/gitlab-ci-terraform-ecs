@@ -1,0 +1,52 @@
+.prd:cluster:
+  variables:
+    TF_WORKSPACE: gitlab-ci-ecs-prd
+
+.prd:cluster:rw:
+  extends: .prd:cluster
+  variables:
+    AWS_ACCESS_KEY_ID: ${DEV_AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${DEV_AWS_SECRET_ACCESS_KEY}
+
+.prd:cluster:ro:
+  extends: .prd:cluster
+  variables:
+    AWS_ACCESS_KEY_ID: ${DEV_RO_AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${DEV_RO_AWS_ACCESS_KEY_SECRET}
+  
+prd:cluster:validate:
+  extends: 
+    - .prd:cluster:ro
+    - .terraform:validate
+  when: on_success
+
+prd:cluster:plan:
+  extends: 
+    - .prd:cluster:ro
+    - .terraform:plan
+  needs:
+    - prd:cluster:validate
+  when: on_success
+
+prd:cluster:apply:
+  extends: 
+    - .prd:cluster:rw
+    - .terraform:apply
+  needs:
+    - prd:cluster:plan
+  when: manual
+
+prd:cluster:destroy-plan:
+  extends: 
+    - .prd:cluster:ro
+    - .terraform:destroy-plan
+  when: manual
+
+prd:cluster:destroy-apply:
+  extends:
+    - .prd:cluster:rw
+    - .terraform:destroy-apply
+  needs:
+    - prd:cluster:destroy-plan
+  when: manual
+  
