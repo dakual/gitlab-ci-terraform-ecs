@@ -6,7 +6,7 @@ resource "aws_db_instance" "main" {
   instance_class       = "db.t3.micro"
   db_name              = var.db_name
   username             = var.db_username
-  password             = var.db_password
+  password             = random_password.rds.result
   parameter_group_name = aws_db_parameter_group.main.name
   db_subnet_group_name = aws_db_subnet_group.main.name
   vpc_security_group_ids = var.rds_security_groups 
@@ -39,6 +39,23 @@ resource "aws_db_subnet_group" "main" {
   }
 }
 
-output "db" {
+resource "random_password" "rds" {
+  length  = 16
+  special = false
+}
+
+output "rds_host" {
   value = aws_db_instance.main.address
+}
+
+output "rds_dbname" {
+  value = var.db_name
+}
+
+output "rds_username" {
+  value = var.db_username
+}
+
+output "rds_password" {
+  value = random_password.rds.result
 }

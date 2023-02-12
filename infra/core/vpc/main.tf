@@ -143,32 +143,6 @@ resource "aws_security_group" "alb" {
   }
 }
 
-resource "aws_security_group" "ecs_tasks" {
-  name   = "${var.name}-sg-task-${var.environment}"
-  vpc_id = aws_vpc.main.id
-
-  ingress {
-    protocol         = "tcp"
-    from_port        = var.container_port
-    to_port          = var.container_port
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  egress {
-    protocol         = "-1"
-    from_port        = 0
-    to_port          = 0
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  tags = {
-    Name        = "${var.name}-sg-task-${var.environment}"
-    Environment = var.environment
-  }
-}
-
 resource "aws_security_group" "rds" {
   name   = "${var.name}-rds-${var.environment}"
   vpc_id = aws_vpc.main.id
@@ -195,27 +169,23 @@ resource "aws_security_group" "rds" {
   }
 }
 
-output "alb" {
+output "vpc_sg_alb" {
   value = aws_security_group.alb.id
 }
 
-output "rds" {
+output "vpc_sg_rds" {
   value = aws_security_group.rds.id
 }
 
-output "ecs_tasks" {
-  value = aws_security_group.ecs_tasks.id
-}
-
-output "id" {
+output "vpc_id" {
   value = aws_vpc.main.id
 }
 
-output "public_subnets" {
+output "vpc_public_subnets" {
   value = aws_subnet.public
 }
 
-output "private_subnets" {
+output "vpc_private_subnets" {
   value = aws_subnet.private
 }
 

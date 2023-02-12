@@ -1,0 +1,15 @@
+environment: prd
+region: eu-west-1
+cidr: 10.1.0.0/16
+availability_zones:
+  - eu-west-1a
+  - eu-west-1b
+private_subnets:
+  - 10.1.0.0/20
+  - 10.1.32.0/20
+public_subnets:
+  - 10.1.16.0/20
+  - 10.1.48.0/20
+rds:
+  db_name: demo
+  db_username: admin

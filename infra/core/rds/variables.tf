@@ -18,10 +18,6 @@ variable "db_username" {
   description = "the username of your db"
 }
 
-variable "db_password" {
-  description = "the password of your db"
-}
-
 variable "rds_subnets" {
   description = "rds subnets"
 }

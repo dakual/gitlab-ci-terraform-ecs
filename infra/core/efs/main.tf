@@ -16,7 +16,7 @@ resource "aws_efs_access_point" "main" {
   }
   
   root_directory {
-    path = "/bitnami/wordpress"
+    path = "/data"
     creation_info {
       owner_gid   = 1001
       owner_uid   = 1001
@@ -55,10 +55,10 @@ resource "aws_security_group" "efs" {
   }
 }
 
-output "id" {
+output "efs_id" {
   value = aws_efs_file_system.main.id
 }
 
-output "ap_id" {
+output "efs_ap_id" {
   value = aws_efs_access_point.main.id
 }

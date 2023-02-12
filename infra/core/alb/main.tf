@@ -26,7 +26,7 @@ resource "aws_alb_target_group" "main" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = var.health_check_path
+    path                = "/"
     unhealthy_threshold = "2"
   }
 
@@ -68,6 +68,14 @@ resource "aws_alb_listener" "https" {
     }
 }
 
-output "aws_alb_target_group_arn" {
+output "alb_tg_arn" {
   value = aws_alb_target_group.main.arn
+}
+
+output "alb_zone_id" {
+  value = aws_lb.main.zone_id
+}
+
+output "alb_dns_name" {
+  value = aws_lb.main.dns_name
 }
