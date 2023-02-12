@@ -39,14 +39,14 @@ image:
 
 
 stages:
-  - validate
-  - plan
-  - apply
+  - infra:validate
+  - infra:plan
+  - infra:apply
 
 
 .terraform:validate:
   extends: .terraform
-  stage: validate
+  stage: infra:validate
   tags:
     - ${RUNNER_TAGS}
   script:
@@ -55,7 +55,7 @@ stages:
 
 .terraform:plan:
   extends: .terraform
-  stage: plan
+  stage: infra:plan
   tags:
     - ${RUNNER_TAGS}
   script:
@@ -71,7 +71,7 @@ stages:
 
 .terraform:apply:
   extends: .terraform
-  stage: apply
+  stage: infra:apply
   tags:
     - ${RUNNER_TAGS}
   script:
