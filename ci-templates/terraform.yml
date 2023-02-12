@@ -63,13 +63,9 @@ stages:
     - terraform show --json $PLAN | convert_report > $PLAN_JSON
   artifacts:
     reports:
-      terraform: ${TF_WORKSPACE}/${PLAN_JSON}
+      terraform: infra/${PLAN_JSON}
     paths:
-      - ${TF_WORKSPACE}/${PLAN}
-  rules:
-    - changes: 
-        - ${TF_WORKSPACE}/**/*
-    - if: $CI_PIPELINE_SOURCE == "web"
+      - infra/${PLAN}
   resource_group: ${TF_WORKSPACE}
 
 
@@ -82,7 +78,7 @@ stages:
     - terraform apply $PLAN
   rules:
     - changes: 
-        - ${TF_WORKSPACE}/**/*
+        - infra/**/*
       when: manual
     - if: $CI_PIPELINE_SOURCE == "web"
       when: manual
