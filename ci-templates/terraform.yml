@@ -35,7 +35,7 @@ image:
   cache:
     key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
     paths:
-      - ${TF_WORKSPACE}/.terraform
+      - infra/.terraform
 
 
 stages:
