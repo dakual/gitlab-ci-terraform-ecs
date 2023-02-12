@@ -20,6 +20,7 @@ image:
   variables:
     PLAN: ${TF_WORKSPACE}.tfplan
     PLAN_JSON: ${TF_WORKSPACE}-plan.json
+    OUTPUT: ${TF_WORKSPACE}-out.json
   before_script:
     - cd infra
     - apk add --update --no-cache jq aws-cli gettext bash
@@ -85,6 +86,10 @@ dev:infra:apply:
     - ${RUNNER_TAGS}
   script:
     - terraform apply $PLAN
+    - terraform output -json >> $OUTPUT
+  artifacts:
+    paths:
+      - infra/$OUTPUT
   rules:
     - changes: 
         - infra/**/*
