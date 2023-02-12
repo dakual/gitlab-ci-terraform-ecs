@@ -18,7 +18,6 @@ dev:infra:validate:
   extends: 
     - .dev:ro
     - .terraform:validate
-  when: on_success
 
 dev:infra:plan:
   extends: 
@@ -26,7 +25,6 @@ dev:infra:plan:
     - .terraform:plan
   needs:
     - dev:infra:validate
-  when: on_success
 
 dev:infra:apply:
   extends: 
@@ -40,6 +38,8 @@ dev:infra:destroy-plan:
   extends: 
     - .dev:ro
     - .terraform:destroy-plan
+  needs:
+    - dev:infra:validate
   when: manual
 
 dev:infra:destroy-apply:
