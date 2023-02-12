@@ -103,7 +103,8 @@ dev:infra:apply:
 dev:infra:destroy-plan:
   extends: 
     - .dev:ro
-    - .terraform   
+    - .terraform
+  stage: infra:plan
   script:
     - terraform plan -destroy -out=$PLAN
   when: manual
@@ -113,6 +114,7 @@ dev:infra:destroy-apply:
   extends:
     - .dev:rw
     - .terraform
+  stage: infra:apply
   script:
     - terraform apply -destroy $PLAN
   needs:
