@@ -24,3 +24,7 @@
 #     - ${RUNNER_TAGS}
 
 
+include:
+  - project: "dakual/gitlab-ci-terraform-ecs"
+    ref: main
+    file: "ci-templates/terraform.yml"
