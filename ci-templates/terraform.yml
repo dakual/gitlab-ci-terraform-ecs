@@ -26,12 +26,12 @@ image:
     - alias convert_report="jq -r '([.resource_changes[]?.change.actions?]|flatten)|{\"create\":(map(select(.==\"create\"))|length),\"update\":(map(select(.==\"update\"))|length),\"delete\":(map(select(.==\"delete\"))|length)}'"
     - echo "${TF_CLOUD_CREDENTIALS}" > "${HOME}/.terraformrc"
     - terraform --version
-    - terraform workspace list
     - terraform init -upgrade
-  rules:
-    - changes: 
-        - infra/**/*
-    - if: $CI_PIPELINE_SOURCE == "web"
+    - terraform workspace list
+  # rules:
+  #   - changes: 
+  #       - infra/**/*
+  #   - if: $CI_PIPELINE_SOURCE == "web"
   cache:
     key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
     paths:
