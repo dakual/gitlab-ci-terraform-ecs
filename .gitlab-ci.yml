@@ -3,15 +3,15 @@ include:
     ref: main
     file: "ci-templates/terraform.yml"
 
-"Application Deployment":
-  stage: deploy
-  trigger:
-    strategy: depend
-    include:
-      - project: "dakual/gitlab-ci-terraform-ecs"
-        ref: main
-        file: "ci-templates/application.yml"
-  rules:
-    - changes: 
-        - app/**/*
-    - if: $CI_PIPELINE_SOURCE == "web"
+# "Application Deployment":
+#   stage: deploy
+#   trigger:
+#     strategy: depend
+#     include:
+#       - project: "dakual/gitlab-ci-terraform-ecs"
+#         ref: main
+#         file: "ci-templates/application.yml"
+#   rules:
+#     - changes: 
+#         - app/**/*
+#     - if: $CI_PIPELINE_SOURCE == "web"

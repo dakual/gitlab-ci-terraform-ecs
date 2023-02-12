@@ -14,4 +14,39 @@
     AWS_ACCESS_KEY_ID: ${DEV_RO_AWS_ACCESS_KEY_ID}
     AWS_SECRET_ACCESS_KEY: ${DEV_RO_AWS_ACCESS_KEY_SECRET}
   
+dev:infra:validate:
+  extends: 
+    - .dev:ro
+    - .terraform:validate
+  when: on_success
 
+dev:infra:plan:
+  extends: 
+    - .dev:ro
+    - .terraform:plan
+  needs:
+    - dev:infra:validate
+  when: on_success
+
+dev:infra:apply:
+  extends: 
+    - .dev:rw
+    - .terraform:apply
+  needs:
+    - dev:infra:plan
+  when: manual
+
+dev:infra:destroy-plan:
+  extends: 
+    - .dev:ro
+    - .terraform:destroy-plan
+  when: manual
+
+dev:infra:destroy-apply:
+  extends:
+    - .dev:rw
+    - .terraform:destroy-apply
+  needs:
+    - dev:infra:destroy-plan
+  when: manual
+  
