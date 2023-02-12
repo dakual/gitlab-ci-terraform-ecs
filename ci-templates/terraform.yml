@@ -104,7 +104,6 @@ stages:
 
 .terraform:destroy-apply:
   extends: .terraform:apply
-  stage: infra:apply
   script:
     - terraform apply -destroy $PLAN
   when: manual
