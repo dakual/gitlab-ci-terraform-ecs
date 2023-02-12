@@ -80,6 +80,8 @@ stages:
     - changes: 
         - infra/**/*
       when: manual
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+      when: never
     - if: $CI_PIPELINE_SOURCE == "web"
       when: manual
   resource_group: ${TF_WORKSPACE}
@@ -99,3 +101,6 @@ stages:
   script:
     - terraform apply -destroy $PLAN
   when: manual
+  rules:
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+      when: never
