@@ -109,6 +109,8 @@ image:
 
 .app:
   image: composer:1.9.3
+  services:
+    - php:7.4-cli-alpine
   before_script:
     - cd app/$APP
     - pwd
@@ -128,10 +130,22 @@ image:
   extends: .app
   stage: app:build
   script:
-    - composer install --prefer-dist --no-ansi --no-interaction --no-progress
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+
+.app:test:
+  extends: .app
+  stage: app:build
+  script:
+    - phpunit --coverage-text --colors=never
 
 app:backend:build:
   variables:
     APP: backend
   extends: 
     - .app:build
+
+app:backend:test:
+  variables:
+    APP: backend
+  extends: 
+    - .app:test
