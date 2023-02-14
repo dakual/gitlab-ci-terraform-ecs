@@ -140,16 +140,29 @@ image:
 
 
 
-app:backend:package:
+.app:package:
   variables:
     APP: backend
+    REPOSITORY: 'terraform output -raw rds_dbname'
   extends:
     - .dev:ro 
     - .terraform
   stage: app:package
+  services:
+    - docker:dind
   script:
-    - terraform output -raw rds_dbname
+    - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
+    - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
+    - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
+    - docker push $REPOSITORY:latest
   rules:
+  #   - changes: 
+  #       - app/**/*
+  #   - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
     - when: always
 
 # .app:package:
@@ -186,3 +199,10 @@ app:backend:test:
   needs:
     - app:backend:build
 
+app:backend:package:
+  variables:
+    APP: backend
+  extends: 
+    - .app:package
+  needs:
+    - app:backend:test
