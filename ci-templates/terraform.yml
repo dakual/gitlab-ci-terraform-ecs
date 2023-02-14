@@ -135,6 +135,7 @@ image:
   image: php:7.4-cli-alpine
   stage: app:test
   script:
+    - ls
     - phpunit --verbose tests
 
 app:backend:build:
