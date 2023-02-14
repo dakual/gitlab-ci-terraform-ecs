@@ -111,6 +111,7 @@ image:
   image: composer:1.9.3
   before_script:
     - cd app/$APP
+    - pwd
   # rules:
   #   - changes: 
   #       - app/**/*
@@ -129,7 +130,7 @@ image:
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress
 
-app:build:
+app:backend:build:
   variables:
     APP: backend
   extends: 
