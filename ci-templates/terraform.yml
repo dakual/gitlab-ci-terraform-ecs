@@ -134,7 +134,6 @@ image:
 
 .app:test:
   extends: .app
-  image: php:7.4-cli-alpine
   stage: app:test
   script:
     - ./vendor/bin/phpunit --verbose tests

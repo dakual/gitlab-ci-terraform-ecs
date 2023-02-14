@@ -18,9 +18,6 @@
             "email": "daghan.altunsoy@gmail.com"
         }
     ],
-    "require": {
-        "php": "^7.4.11"
-    },
     "require-dev": {
         "phpunit/phpunit": "^9.5.10"
     }
