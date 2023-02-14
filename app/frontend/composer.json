@@ -1,0 +1,16 @@
+{
+    "name": "daghan/frontend",
+    "description": "Frontend App",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Daghan\\Frontend\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "daghan",
+            "email": "daghan.altunsoy@gmail.com"
+        }
+    ]
+}
