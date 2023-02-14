@@ -152,7 +152,7 @@ app:backend:package:
   script:
     - terraform output -raw rds_dbname
   rules:
-    when: always
+    - when: always
 
 # .app:package:
 #   extends: .app
