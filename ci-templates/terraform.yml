@@ -138,6 +138,8 @@ image:
   script:
     - ./vendor/bin/phpunit --verbose tests
 
+
+
 app:backend:package:
   variables:
     APP: backend
@@ -148,8 +150,7 @@ app:backend:package:
     - pwd
     - ls
   script:
-    - pwd
-    - ls
+    - terraform output -raw rds_dbname
 
 # .app:package:
 #   extends: .app
