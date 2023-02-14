@@ -112,6 +112,8 @@ image:
   before_script:
     - cd app/$APP
     - pwd
+    - composer --version
+    - php --version
   # rules:
   #   - changes: 
   #       - app/**/*
