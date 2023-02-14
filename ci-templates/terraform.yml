@@ -151,8 +151,8 @@ app:backend:package:
     - ls
   script:
     - terraform output -raw rds_dbname
-  when:
-    - on_success
+  rules:
+    when: always
 
 # .app:package:
 #   extends: .app
