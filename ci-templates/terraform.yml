@@ -143,10 +143,7 @@ image:
 app:backend:package:
   variables:
     APP: backend
-  extends: .app
-  image:
-    name: hashicorp/terraform:${TF_VERSION}
-    entrypoint: [""]
+  extends: .terraform
   stage: app:package
   before_script:
     - cd infra
@@ -154,6 +151,8 @@ app:backend:package:
     - ls
   script:
     - terraform output -raw rds_dbname
+  rules:
+    - on_success
 
 # .app:package:
 #   extends: .app
