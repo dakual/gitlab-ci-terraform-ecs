@@ -143,7 +143,7 @@ image:
 app:backend:package:
   variables:
     APP: backend
-  extends: .app
+  extends: .terraform
   stage: app:package
   before_script:
     - cd infra
