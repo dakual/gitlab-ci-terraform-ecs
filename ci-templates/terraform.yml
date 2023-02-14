@@ -138,6 +138,38 @@ image:
   script:
     - ./vendor/bin/phpunit --verbose tests
 
+app:backend:package:
+  variables:
+    APP: backend
+  extends: .app
+  before_script:
+    - cd infra
+    - pwd
+    - ls
+  script:
+    - pwd
+    - ls
+
+# .app:package:
+#   extends: .app
+#   stage: build
+#   image: docker:latest
+#   services:
+#     - docker:dind
+#   before_script:
+#     - apk add --no-cache aws-cli
+#     - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
+#   script:
+#     - cd app
+#     - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
+#     - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
+#     - docker push $REPOSITORY:latest
+#   tags:
+#     - ${RUNNER_TAGS}
+
+
+
+
 app:backend:build:
   variables:
     APP: backend
@@ -151,3 +183,4 @@ app:backend:test:
     - .app:test
   needs:
     - app:backend:build
+
