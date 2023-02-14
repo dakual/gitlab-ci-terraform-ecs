@@ -143,7 +143,10 @@ image:
 app:backend:package:
   variables:
     APP: backend
-  extends: .terraform
+  extends: .app
+  image:
+    name: hashicorp/terraform:${TF_VERSION}
+    entrypoint: [""]
   stage: app:package
   before_script:
     - cd infra
