@@ -148,3 +148,5 @@ app:backend:test:
     APP: backend
   extends: 
     - .app:test
+  needs:
+    - app:backend:build
