@@ -108,9 +108,9 @@ image:
 
 
 .app:
-  image: composer:1.9.3
+  image: php:7.4-cli-alpine
   services:
-    - php:7.4-cli-alpine
+    - composer:1.9.3
   before_script:
     - cd app/$APP
     - pwd
