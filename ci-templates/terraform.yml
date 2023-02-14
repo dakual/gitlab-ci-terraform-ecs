@@ -145,10 +145,6 @@ app:backend:package:
     APP: backend
   extends: .terraform
   stage: app:package
-  before_script:
-    - cd infra
-    - pwd
-    - ls
   script:
     - terraform output -raw rds_dbname
   rules:
