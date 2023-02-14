@@ -143,7 +143,9 @@ image:
 app:backend:package:
   variables:
     APP: backend
-  extends: .terraform
+  extends:
+    - .dev:ro 
+    - .terraform
   stage: app:package
   script:
     - terraform output -raw rds_dbname
