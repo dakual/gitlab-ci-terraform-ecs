@@ -114,6 +114,8 @@ image:
   before_script:
     - cd app/$APP
     - pwd
+    - php --version
+    - composer --version
   # rules:
   #   - changes: 
   #       - app/**/*
@@ -134,7 +136,7 @@ image:
 
 .app:test:
   extends: .app
-  stage: app:build
+  stage: app:test
   script:
     - phpunit --coverage-text --colors=never
 
