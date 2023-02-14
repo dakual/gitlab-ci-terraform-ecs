@@ -138,7 +138,7 @@ image:
   extends: .app
   stage: app:test
   script:
-    - phpunit --coverage-text --colors=never
+    - phpunit --verbose tests
 
 app:backend:build:
   variables:
