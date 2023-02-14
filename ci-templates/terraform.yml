@@ -11,6 +11,15 @@ variables:
     }
 
 
+stages:
+  - infra:validate
+  - infra:plan
+  - infra:apply
+  - app:build
+  - app:test
+  - app:package
+
+
 image:
   name: hashicorp/terraform:${TF_VERSION}
   entrypoint: [""]
@@ -37,20 +46,13 @@ image:
     key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
     paths:
       - infra/.terraform
-
-
-stages:
-  - infra:validate
-  - infra:plan
-  - infra:apply
-  - deploy
+  tags:
+    - ${RUNNER_TAGS}
 
 
 .terraform:validate:
   extends: .terraform
   stage: infra:validate
-  tags:
-    - ${RUNNER_TAGS}
   script:
     - terraform validate
 
@@ -58,8 +60,6 @@ stages:
 .terraform:plan:
   extends: .terraform
   stage: infra:plan
-  tags:
-    - ${RUNNER_TAGS}
   script:
     - terraform plan -out=$PLAN
     - terraform show --json $PLAN | convert_report > $PLAN_JSON
@@ -74,8 +74,6 @@ stages:
 .terraform:apply:
   extends: .terraform
   stage: infra:apply
-  tags:
-    - ${RUNNER_TAGS}
   script:
     - terraform apply $PLAN
     - terraform output -json >> $OUTPUT
@@ -107,3 +105,33 @@ stages:
   script:
     - terraform apply -destroy $PLAN
   when: manual
+
+
+.app:
+  image: composer:1.9.3
+  before_script:
+    - cd app/$APP
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress
+  # rules:
+  #   - changes: 
+  #       - app/**/*
+  #   - if: $CI_PIPELINE_SOURCE == "web"
+  cache:
+    key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
+    paths:
+      - app/$APP/vendor
+  tags:
+    - ${RUNNER_TAGS}
+
+
+.app:build:
+  extends: .app
+  stage: app:build
+  script:
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress
+
+app:build:
+  variables:
+    APP: backend
+  extends: 
+    - .app:build
