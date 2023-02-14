@@ -108,7 +108,7 @@ image:
 
 
 .app:
-  image: composer:1.9.3
+  image: composer:latest
   before_script:
     - cd app/$APP
     - pwd
