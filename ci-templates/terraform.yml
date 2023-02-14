@@ -142,6 +142,7 @@ app:backend:package:
   variables:
     APP: backend
   extends: .app
+  stage: app:package
   before_script:
     - cd infra
     - pwd
