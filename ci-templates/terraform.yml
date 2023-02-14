@@ -108,14 +108,10 @@ image:
 
 
 .app:
-  image: php:7.4-cli-alpine
-  services:
-    - composer:1.9.3
+  image: composer:1.9.3
   before_script:
     - cd app/$APP
     - pwd
-    - php --version
-    - composer --version
   # rules:
   #   - changes: 
   #       - app/**/*
@@ -136,6 +132,7 @@ image:
 
 .app:test:
   extends: .app
+  image: php:7.4-cli-alpine
   stage: app:test
   script:
     - phpunit --verbose tests
