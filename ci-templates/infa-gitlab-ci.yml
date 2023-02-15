@@ -1,7 +1,4 @@
 ---
-include:
-  - local: './workflows/*.yml'
-
 stages:
   - infra:validate
   - infra:plan
