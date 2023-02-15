@@ -1,6 +1,4 @@
-include:
-  - local: 'ci-templates/workflows/*.yml'
-  
+---
 stages:
   - development
   - staging
