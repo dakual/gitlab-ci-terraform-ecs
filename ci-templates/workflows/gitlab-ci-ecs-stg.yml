@@ -1,0 +1,31 @@
+stg:infra:validate:
+  extends: 
+    - .terraform:validate
+
+stg:infra:plan:
+  extends: 
+    - .terraform:plan
+  needs:
+    - stg:infra:validate
+
+stg:infra:apply:
+  extends: 
+    - .terraform:apply
+  needs:
+    - stg:infra:plan
+  when: manual
+
+stg:infra:destroy-plan:
+  extends: 
+    - .terraform:destroy-plan
+  needs:
+    - stg:infra:validate
+  when: manual
+
+stg:infra:destroy-apply:
+  extends:
+    - .terraform:destroy-apply
+  needs:
+    - stg:infra:destroy-plan
+  when: manual
+  
