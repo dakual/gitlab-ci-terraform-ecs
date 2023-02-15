@@ -25,7 +25,6 @@ terraform-dev:
         ref: main
         file:
           - 'ci-templates/infa-gitlab-ci.yml'
-          - 'ci-templates/workflows/gitlab-ci-ecs-dev.yml'
     strategy: depend
 
 
@@ -42,7 +41,6 @@ terraform-stg:
         ref: main
         file:
           - 'ci-templates/infa-gitlab-ci.yml'
-          - 'ci-templates/workflows/gitlab-ci-ecs-stg.yml'
     strategy: depend
   needs:
     - job: "terraform-dev"
@@ -61,7 +59,6 @@ terraform-prd:
         ref: main
         file:
           - 'ci-templates/infa-gitlab-ci.yml'
-          - 'ci-templates/workflows/gitlab-ci-ecs-prd.yml'
     strategy: depend
   needs:
     - job: "terraform-stg"
