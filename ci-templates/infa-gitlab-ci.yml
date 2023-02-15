@@ -1,6 +1,6 @@
 ---
 include:
-  - local: 'workflows/*.yml'
+  - local: '/workflows/*.yml'
 
 stages:
   - infra:validate
