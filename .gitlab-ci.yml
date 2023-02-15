@@ -21,7 +21,7 @@ terraform-dev:
     AWS_REGION: "eu-central-1"
   trigger:
     include:
-      - project: 'gitlab-ci-terraform-ecs'
+      - project: 'dakual/gitlab-ci-terraform-ecs'
         ref: main
         file:
           - '/ci-templates/infa-gitlab-ci.yml'
@@ -37,7 +37,7 @@ terraform-stg:
     AWS_REGION: "eu-central-1"
   trigger:
     include:
-      - project: 'gitlab-ci-terraform-ecs'
+      - project: 'dakual/gitlab-ci-terraform-ecs'
         ref: main
         file:
           - '/ci-templates/infa-gitlab-ci.yml'
@@ -55,7 +55,7 @@ terraform-prd:
     AWS_REGION: "eu-central-1"
   trigger:
     include:
-      - project: 'gitlab-ci-terraform-ecs'
+      - project: 'dakual/gitlab-ci-terraform-ecs'
         ref: main
         file:
           - '/ci-templates/infa-gitlab-ci.yml'
