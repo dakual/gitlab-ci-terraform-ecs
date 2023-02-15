@@ -24,7 +24,7 @@ terraform-dev:
       - project: 'dakual/gitlab-ci-terraform-ecs'
         ref: main
         file:
-          - 'ci-templates/infa-gitlab-ci.yml'
+          - '/ci-templates/infa-gitlab-ci.yml'
     strategy: depend
 
 
