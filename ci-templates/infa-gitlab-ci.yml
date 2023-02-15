@@ -1,6 +1,6 @@
 ---
 include:
-  - local: '/ci-templates/workflows/*.yml'
+  - local: './ci-templates/workflows/*.yml'
 
 stages:
   - infra:validate
