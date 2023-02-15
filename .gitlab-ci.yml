@@ -21,10 +21,10 @@ terraform-dev:
     AWS_REGION: "eu-central-1"
   trigger:
     include:
-      - project: 'gitlab-ci-terraform-ecs/ci-templates'
+      - project: 'gitlab-ci-terraform-ecs'
         ref: main
         file:
-          - '/infa-gitlab-ci.yml'
+          - '/ci-templates/infa-gitlab-ci.yml'
     strategy: depend
 
 
@@ -37,10 +37,10 @@ terraform-stg:
     AWS_REGION: "eu-central-1"
   trigger:
     include:
-      - project: 'gitlab-ci-terraform-ecs/ci-templates'
+      - project: 'gitlab-ci-terraform-ecs'
         ref: main
         file:
-          - '/Terraform.gitlab-ci.yml'
+          - '/ci-templates/infa-gitlab-ci.yml'
     strategy: depend
   needs:
     - job: "terraform-dev"
@@ -55,10 +55,10 @@ terraform-prd:
     AWS_REGION: "eu-central-1"
   trigger:
     include:
-      - project: 'gitlab-ci-terraform-ecs/ci-templates'
+      - project: 'gitlab-ci-terraform-ecs'
         ref: main
         file:
-          - '/Terraform.gitlab-ci.yml'
+          - '/ci-templates/infa-gitlab-ci.yml'
     strategy: depend
   needs:
     - job: "terraform-stg"
