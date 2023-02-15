@@ -1,124 +1,100 @@
 ---
 stages:
-  - infra:validate
-  - infra:plan
-  - infra:apply
+  - test
 
-image:
-  name: hashicorp/terraform:${TF_VERSION}
-  entrypoint: [""]
+test:
+  stage: test
+  image: docker:latest
+  script: 
+    - echo hello
 
+# stages:
+#   - infra:validate
+#   - infra:plan
+#   - infra:apply
 
-.terraform:
-  variables:
-    PLAN: ${TF_WORKSPACE}.tfplan
-    PLAN_JSON: ${TF_WORKSPACE}-plan.json
-    OUTPUT: ${TF_WORKSPACE}-out.json
-  before_script:
-    - cd infra
-    - apk add --update --no-cache jq aws-cli gettext bash
-    - alias convert_report="jq -r '([.resource_changes[]?.change.actions?]|flatten)|{\"create\":(map(select(.==\"create\"))|length),\"update\":(map(select(.==\"update\"))|length),\"delete\":(map(select(.==\"delete\"))|length)}'"
-    - echo "${TF_CLOUD_CREDENTIALS}" > "${HOME}/.terraformrc"
-    - terraform --version
-    - terraform init -upgrade
-    - terraform workspace list
-  rules:
-    - changes: 
-        - infra/**/*
-    - if: $CI_PIPELINE_SOURCE == "web"
-  cache:
-    key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
-    paths:
-      - infra/.terraform
-  tags:
-    - ${RUNNER_TAGS}
+# image:
+#   name: hashicorp/terraform:${TF_VERSION}
+#   entrypoint: [""]
 
 
-.terraform:validate:
-  extends: .terraform
-  stage: infra:validate
-  script:
-    - terraform validate
+# .terraform:
+#   variables:
+#     PLAN: ${TF_WORKSPACE}.tfplan
+#     PLAN_JSON: ${TF_WORKSPACE}-plan.json
+#     OUTPUT: ${TF_WORKSPACE}-out.json
+#   before_script:
+#     - cd infra
+#     - apk add --update --no-cache jq aws-cli gettext bash
+#     - alias convert_report="jq -r '([.resource_changes[]?.change.actions?]|flatten)|{\"create\":(map(select(.==\"create\"))|length),\"update\":(map(select(.==\"update\"))|length),\"delete\":(map(select(.==\"delete\"))|length)}'"
+#     - echo "${TF_CLOUD_CREDENTIALS}" > "${HOME}/.terraformrc"
+#     - terraform --version
+#     - terraform init -upgrade
+#     - terraform workspace list
+#   rules:
+#     - changes: 
+#         - infra/**/*
+#     - if: $CI_PIPELINE_SOURCE == "web"
+#   cache:
+#     key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
+#     paths:
+#       - infra/.terraform
+#   tags:
+#     - ${RUNNER_TAGS}
 
 
-.terraform:plan:
-  extends: .terraform
-  stage: infra:plan
-  script:
-    - terraform plan -out=$PLAN
-    - terraform show --json $PLAN | convert_report > $PLAN_JSON
-  artifacts:
-    reports:
-      terraform: infra/${PLAN_JSON}
-    paths:
-      - infra/${PLAN}
-  resource_group: ${TF_WORKSPACE}
+# .terraform:validate:
+#   extends: .terraform
+#   stage: infra:validate
+#   script:
+#     - terraform validate
 
 
-.terraform:apply:
-  extends: .terraform
-  stage: infra:apply
-  script:
-    - terraform apply $PLAN
-    - terraform output -json >> $OUTPUT
-  artifacts:
-    paths:
-      - infra/$OUTPUT
-  rules:
-    - changes: 
-        - infra/**/*
-      when: manual
-    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "web"
-      when: manual
-  resource_group: ${TF_WORKSPACE}
-  environment:
-    name: ${TF_WORKSPACE}
+# .terraform:plan:
+#   extends: .terraform
+#   stage: infra:plan
+#   script:
+#     - terraform plan -out=$PLAN
+#     - terraform show --json $PLAN | convert_report > $PLAN_JSON
+#   artifacts:
+#     reports:
+#       terraform: infra/${PLAN_JSON}
+#     paths:
+#       - infra/${PLAN}
+#   resource_group: ${TF_WORKSPACE}
 
 
-.terraform:destroy-plan:
-  extends: .terraform:plan
-  script:
-    - terraform plan -destroy -out=$PLAN
-  when: manual
+# .terraform:apply:
+#   extends: .terraform
+#   stage: infra:apply
+#   script:
+#     - terraform apply $PLAN
+#     - terraform output -json >> $OUTPUT
+#   artifacts:
+#     paths:
+#       - infra/$OUTPUT
+#   rules:
+#     - changes: 
+#         - infra/**/*
+#       when: manual
+#     - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+#       when: never
+#     - if: $CI_PIPELINE_SOURCE == "web"
+#       when: manual
+#   resource_group: ${TF_WORKSPACE}
+#   environment:
+#     name: ${TF_WORKSPACE}
 
 
-.terraform:destroy-apply:
-  extends: .terraform:apply
-  script:
-    - terraform apply -destroy $PLAN
-  when: manual
+# .terraform:destroy-plan:
+#   extends: .terraform:plan
+#   script:
+#     - terraform plan -destroy -out=$PLAN
+#   when: manual
 
 
-dev:infra:validate:
-  extends: 
-    - .terraform:validate
-
-dev:infra:plan:
-  extends: 
-    - .terraform:plan
-  needs:
-    - dev:infra:validate
-
-dev:infra:apply:
-  extends: 
-    - .terraform:apply
-  needs:
-    - dev:infra:plan
-  when: manual
-
-dev:infra:destroy-plan:
-  extends: 
-    - .terraform:destroy-plan
-  needs:
-    - dev:infra:validate
-  when: manual
-
-dev:infra:destroy-apply:
-  extends:
-    - .terraform:destroy-apply
-  needs:
-    - dev:infra:destroy-plan
-  when: manual
-  
+# .terraform:destroy-apply:
+#   extends: .terraform:apply
+#   script:
+#     - terraform apply -destroy $PLAN
+#   when: manual
