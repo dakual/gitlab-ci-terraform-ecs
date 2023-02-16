@@ -216,6 +216,7 @@ image:
 app:backend:package:
   variables:
     APP: backend
+    AWS_DEFAULT_REGION: eu-central-1
   extends: 
     - .app:package
   # needs:
