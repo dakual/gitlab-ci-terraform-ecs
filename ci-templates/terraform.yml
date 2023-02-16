@@ -148,17 +148,22 @@ image:
 
 
 .app:package:
-  variables:
-    REPOSITORY: 'terraform output -raw rds_dbname'
   extends:
-    - .dev:ro 
-    - .terraform
+    - .dev:rw
   stage: app:package
+  image: docker:latest
   services:
     - docker:dind
+  before_script:
+    - cd app/backend
+    - apk add --update --no-cache jq aws-cli gettext bash
+    - |
+      REPOSITORY=$(aws ecr describe-repositories --repository-name ${APP} --query "repositories[].repositoryArn" --output text 2>&1)
+      if echo ${REPOSITORY} | grep -q RepositoryNotFoundException; then
+        REPOSITORY=$(aws ecr create-repository --repository-name ${APP} --query "repository.repositoryArn" --output text 2>&1)  
+      fi
+    - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY  
   script:
-    - apk add --update --no-cache docker
-    - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
     - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
     - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
     - docker push $REPOSITORY:latest
