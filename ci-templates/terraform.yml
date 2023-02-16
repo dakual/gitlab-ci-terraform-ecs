@@ -155,7 +155,7 @@ image:
     - .terraform
   stage: app:package
   services:
-    - docker:latest
+    - docker:dind
   script:
     - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
     - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
