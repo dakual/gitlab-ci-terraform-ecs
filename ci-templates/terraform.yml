@@ -156,7 +156,7 @@ image:
     - docker:dind
   before_script:
     - cd app/backend
-    - apk add --update --no-cache jq aws-cli gettext bash
+    - apk add --update --no-cache jq aws-cli gettext bash git
     - |
       REPOSITORY=$(aws ecr describe-repositories --repository-name ${APP} --query "repositories[].repositoryArn" --output text)
       if echo ${REPOSITORY} | grep -q RepositoryNotFoundException; then
