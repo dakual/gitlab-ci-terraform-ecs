@@ -149,7 +149,6 @@ image:
 
 .app:package:
   variables:
-    APP: backend
     REPOSITORY: 'terraform output -raw rds_dbname'
   extends:
     - .dev:ro 
@@ -192,24 +191,24 @@ image:
 
 
 
-app:backend:build:
-  variables:
-    APP: backend
-  extends: 
-    - .app:build
+# app:backend:build:
+#   variables:
+#     APP: backend
+#   extends: 
+#     - .app:build
 
-app:backend:test:
-  variables:
-    APP: backend
-  extends: 
-    - .app:test
-  needs:
-    - app:backend:build
+# app:backend:test:
+#   variables:
+#     APP: backend
+#   extends: 
+#     - .app:test
+#   needs:
+#     - app:backend:build
 
 app:backend:package:
   variables:
     APP: backend
   extends: 
     - .app:package
-  needs:
-    - app:backend:test
+  # needs:
+  #   - app:backend:test
