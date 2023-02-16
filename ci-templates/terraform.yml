@@ -157,7 +157,7 @@ image:
   before_script:
     - cd app/backend
     - apk add --update --no-cache aws-cli
-    - |
+    - >
       REPOSITORY=$(aws ecr describe-repositories --repository-name ${APP} --query "repositories[].repositoryArn" --output text 2>&1)
       if [[ "$REPOSITORY" == *"RepositoryNotFoundException"* ]]; then
         REPOSITORY=$(aws ecr create-repository --repository-name ${APP} --query "repository.repositoryArn" --output text 2>&1)  
