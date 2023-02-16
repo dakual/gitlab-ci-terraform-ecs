@@ -176,7 +176,9 @@ image:
     - if: $CI_PIPELINE_SOURCE == "web"
       when: manual
     - when: always
-
+  tags:
+    - ${RUNNER_TAGS}
+    
 # .app:package:
 #   extends: .app
 #   stage: build
