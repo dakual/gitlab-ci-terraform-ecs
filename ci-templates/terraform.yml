@@ -158,9 +158,9 @@ image:
     - cd app/backend
     - apk add --update --no-cache jq aws-cli gettext bash
     - |
-      REPOSITORY=$(aws ecr describe-repositories --repository-name ${APP} --query "repositories[].repositoryArn" --output text 2>&1)
+      REPOSITORY=$(aws ecr describe-repositories --repository-name ${APP} --query "repositories[].repositoryArn" --output text)
       if echo ${REPOSITORY} | grep -q RepositoryNotFoundException; then
-        REPOSITORY=$(aws ecr create-repository --repository-name ${APP} --query "repository.repositoryArn" --output text 2>&1)  
+        REPOSITORY=$(aws ecr create-repository --repository-name ${APP} --query "repository.repositoryArn" --output text)  
       fi
     - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY  
   script:
@@ -178,7 +178,7 @@ image:
     - when: always
   tags:
     - ${RUNNER_TAGS}
-    
+
 # .app:package:
 #   extends: .app
 #   stage: build
