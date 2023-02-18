@@ -46,6 +46,13 @@ module "r53" {
   alb_dns_name        = module.alb.alb_dns_name
 }
 
+module "ecr" {
+  source              = "./core/ecr"
+  for_each            = local.var.apps
+  name                = each.value["reponame"]
+  environment         = local.var.environment
+}
+
 module "rds" {
   source              = "./core/rds"
   name                = local.var.name
@@ -88,4 +95,8 @@ module "ecs" {
   source              = "./core/ecs"
   name                = local.var.name
   environment         = local.var.environment
+  vpc_id              = module.vpc.vpc_id
+  subnets             = module.vpc.vpc_private_subnets
+  env                 = local.var
 }
+
