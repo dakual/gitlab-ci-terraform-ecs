@@ -49,3 +49,11 @@ variable "ecs_task_role" {
 variable "app" {
   description = "app vars"
 }
+
+variable "efs_id" {
+  description = "efs_id"
+}
+
+variable "efs_ap_id" {
+  description = "efs_ap_id"
+}

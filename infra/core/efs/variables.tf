@@ -13,3 +13,7 @@ variable "private_subnets" {
 variable "vpc_id" {
   description = "VPC ID"
 }
+
+variable "efs_sg" {
+  description = "sg"
+}

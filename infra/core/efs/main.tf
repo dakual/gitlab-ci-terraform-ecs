@@ -30,29 +30,7 @@ resource "aws_efs_mount_target" "main" {
 
   file_system_id  = aws_efs_file_system.main.id
   subnet_id       = var.private_subnets[count.index].id
-  security_groups = [ aws_security_group.efs.id ]
-}
-
-resource "aws_security_group" "efs" {
-  name        = "${var.name}-sg-efs-${var.environment}"
-  description = "Allow EFS inbound traffic from VPC"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    description      = "NFS traffic from VPC"
-    from_port        = 2049
-    to_port          = 2049
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    # security_groups  = [aws_security_group.tasks.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  security_groups = var.efs_sg
 }
 
 output "efs_id" {

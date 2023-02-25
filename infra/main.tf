@@ -71,6 +71,7 @@ module "efs" {
   name                = local.var.name
   private_subnets     = module.vpc.vpc_private_subnets
   vpc_id              = module.vpc.vpc_id
+  efs_sg              = [ module.vpc.vpc_sg_efs ]
   environment         = local.var.environment
 }
 
@@ -109,4 +110,6 @@ module "frontend" {
   ecs_task_sg         = [ module.vpc.vpc_sg_ecs ]
   ecs_task_role       = module.iam.ecs_task_execution_role_arn
   main_alb_tg_arn     = module.alb.alb_tg_arn
+  efs_id              = module.efs.efs_id
+  efs_ap_id           = module.efs.efs_ap_id
 }

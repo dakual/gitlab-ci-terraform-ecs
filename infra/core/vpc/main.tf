@@ -194,6 +194,28 @@ resource "aws_security_group" "ecs_task" {
   }
 }
 
+resource "aws_security_group" "efs" {
+  name        = "${var.name}-sg-efs-${var.environment}"
+  description = "Allow EFS inbound traffic from VPC"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description      = "NFS traffic from VPC"
+    from_port        = 2049
+    to_port          = 2049
+    protocol         = "tcp"
+    cidr_blocks      = [aws_vpc.main.cidr_block]
+    security_groups  = [aws_security_group.ecs_task.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 output "vpc_sg_alb" {
   value = aws_security_group.alb.id
 }
@@ -204,6 +226,10 @@ output "vpc_sg_rds" {
 
 output "vpc_sg_ecs" {
   value = aws_security_group.ecs_task.id
+}
+
+output "vpc_sg_efs" {
+  value = aws_security_group.efs.id
 }
 
 output "vpc_id" {

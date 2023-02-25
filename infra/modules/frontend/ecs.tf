@@ -8,11 +8,18 @@ resource "aws_ecs_task_definition" "main" {
   task_role_arn            = var.ecs_task_role
   
   container_definitions = jsonencode([{
-    name         = "${var.name}-container-${var.app.name}"
-    image        = "nginx:latest"
-    essential    = true
-    environment  = toset(var.app.task.container_environment)
-    portMappings = toset(var.app.task.portMappings)
+    name            = "${var.name}-container-${var.app.name}"
+    image           = "nginx:latest"
+    linuxParameters = {
+      initProcessEnabled = true
+    }
+    essential       = true
+    environment     = toset(var.app.task.container_environment)
+    portMappings    = toset(var.app.task.portMappings)
+    mountPoints = [{
+      "sourceVolume"  = "data",
+      "containerPath" = "/data"
+    }]
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -22,6 +29,19 @@ resource "aws_ecs_task_definition" "main" {
       }
     }
   }])
+
+  volume {
+    name = "data"
+    efs_volume_configuration {
+      file_system_id = var.efs_id
+      root_directory = "/"
+      transit_encryption = "ENABLED"
+      authorization_config {
+        access_point_id = var.efs_ap_id
+        iam             = "DISABLED"
+      }
+    }
+  }
 
   tags = {
     Name        = "${var.name}-task-${var.app.name}"
@@ -37,6 +57,7 @@ resource "aws_ecs_service" "main" {
   deployment_minimum_healthy_percent = var.app.service.deployment_minimum_healthy_percent
   deployment_maximum_percent         = var.app.service.deployment_maximum_percent
   health_check_grace_period_seconds  = var.app.service.health_check_grace_period_seconds
+  enable_execute_command             = true
   launch_type                        = "FARGATE"
   scheduling_strategy                = "REPLICA"
 
