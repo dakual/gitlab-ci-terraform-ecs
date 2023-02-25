@@ -33,8 +33,8 @@ resource "aws_ecs_service" "main" {
   name                               = "${var.name}-service-${var.app.name}"
   cluster                            = var.ecs_cluster_id
   task_definition                    = aws_ecs_task_definition.main.arn
-  desired_count                      = var.app.service.deployment_minimum_healthy_percent
-  deployment_minimum_healthy_percent = var.app.service.service_desired_count
+  desired_count                      = var.app.service.desired_count
+  deployment_minimum_healthy_percent = var.app.service.deployment_minimum_healthy_percent
   deployment_maximum_percent         = var.app.service.deployment_maximum_percent
   health_check_grace_period_seconds  = var.app.service.health_check_grace_period_seconds
   launch_type                        = "FARGATE"
@@ -58,8 +58,8 @@ resource "aws_ecs_service" "main" {
 }
 
 resource "aws_appautoscaling_target" "ecs_target" {
-  max_capacity       = 4
-  min_capacity       = 1
+  max_capacity       = var.app.autoscaling.max_capacity
+  min_capacity       = var.app.autoscaling.min_capacity
   resource_id        = "service/${var.ecs_cluster_name}/${aws_ecs_service.main.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
