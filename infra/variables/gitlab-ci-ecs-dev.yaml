@@ -15,8 +15,9 @@ rds:
   db_username: admin
 
 apps:
-  backend:
-    reponame: backend-repo
+  frontend:
+    name: frontend
+    reponame: frontend-repo
     task:
       container_cpu: 256
       container_memory: 512

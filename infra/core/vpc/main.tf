@@ -169,12 +169,42 @@ resource "aws_security_group" "rds" {
   }
 }
 
+resource "aws_security_group" "ecs_task" {
+  name   = "${var.name}-sg-task-${var.environment}"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    protocol         = "-1"
+    from_port        = 0
+    to_port          = 0
+    # cidr_blocks      = ["0.0.0.0/0"]
+    # ipv6_cidr_blocks = ["::/0"]
+  }
+
+  egress {
+    protocol         = "-1"
+    from_port        = 0
+    to_port          = 0
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = {
+    Name        = "${var.name}-sg-task-${var.environment}"
+    Environment = var.environment
+  }
+}
+
 output "vpc_sg_alb" {
   value = aws_security_group.alb.id
 }
 
 output "vpc_sg_rds" {
   value = aws_security_group.rds.id
+}
+
+output "vpc_sg_ecs" {
+  value = aws_security_group.ecs_task.id
 }
 
 output "vpc_id" {

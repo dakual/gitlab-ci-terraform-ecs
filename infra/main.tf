@@ -46,13 +46,6 @@ module "r53" {
   alb_dns_name        = module.alb.alb_dns_name
 }
 
-module "ecr" {
-  source              = "./core/ecr"
-  for_each            = local.var.apps
-  name                = each.value["reponame"]
-  environment         = local.var.environment
-}
-
 module "rds" {
   source              = "./core/rds"
   name                = local.var.name
@@ -95,8 +88,25 @@ module "ecs" {
   source              = "./core/ecs"
   name                = local.var.name
   environment         = local.var.environment
-  vpc_id              = module.vpc.vpc_id
-  subnets             = module.vpc.vpc_private_subnets
-  env                 = local.var
 }
 
+#########################################################
+# MODULES
+#########################################################
+
+module "frontend" {
+  source              = "./modules/frontend"
+  name                = local.var.name
+  environment         = local.var.environment
+  region              = local.var.region
+  app                 = local.var.apps.frontend
+  vpc_id              = module.vpc.vpc_id
+  private_subnets     = module.vpc.vpc_private_subnets
+  public_subnets      = module.vpc.vpc_public_subnets
+  ecs_cluster_name    = module.ecs.ecs_name
+  ecs_cluster_id      = module.ecs.ecs_id
+  ecs_log_group       = module.ecs.ecs_log_group
+  ecs_task_sg         = module.vpc.vpc_sg_ecs
+  ecs_task_role       = module.iam.ecs_task_execution_role_arn
+  main_alb_tg_arn     = module.alb.alb_tg_arn
+}
