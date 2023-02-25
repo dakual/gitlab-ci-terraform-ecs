@@ -106,7 +106,7 @@ module "frontend" {
   ecs_cluster_name    = module.ecs.ecs_name
   ecs_cluster_id      = module.ecs.ecs_id
   ecs_log_group       = module.ecs.ecs_log_group
-  ecs_task_sg         = module.vpc.vpc_sg_ecs
+  ecs_task_sg         = [ module.vpc.vpc_sg_ecs ]
   ecs_task_role       = module.iam.ecs_task_execution_role_arn
   main_alb_tg_arn     = module.alb.alb_tg_arn
 }
