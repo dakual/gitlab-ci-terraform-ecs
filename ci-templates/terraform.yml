@@ -159,10 +159,10 @@ image:
   image: docker:latest
   stage: app:deploy
   variables:
-    - CLUSTER_NAME: ${APP_NAME}-cluster-${APP_ENV}
-    - SERVICE_NAME: ${APP_NAME}-service-${APP}
-    - TASK_FAMILY: ${APP_NAME}-task-${APP}
-    - NEW_IMAGE: $(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryUri" --output text):$CI_COMMIT_SHORT_SHA
+    CLUSTER_NAME: ${APP_NAME}-cluster-${APP_ENV}
+    SERVICE_NAME: ${APP_NAME}-service-${APP}
+    TASK_FAMILY: ${APP_NAME}-task-${APP}
+    NEW_IMAGE: $(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryUri" --output text):$CI_COMMIT_SHORT_SHA
   before_script:
     - apk add --update --no-cache aws-cli jq
   script:
