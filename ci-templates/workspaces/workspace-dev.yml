@@ -1,38 +1,40 @@
 .dev:
   variables:
-    APP_NAME: my-app
-    APP_ENV: dev
+    PROJECT: my-app
+    ENVIRONMENT: dev
     TF_WORKSPACE: gitlab-ci-ecs-dev
 
-.dev:rw:
-  extends: .dev
+.dev:frontend:
+  extends: 
+    - .dev
   variables:
-    AWS_ACCESS_KEY_ID: ${DEV_AWS_ACCESS_KEY_ID}
-    AWS_SECRET_ACCESS_KEY: ${DEV_AWS_SECRET_ACCESS_KEY}
-    AWS_DEFAULT_REGION: ${DEV_AWS_DEFAULT_REGION}
+    APP: frontend
 
-.dev:ro:
-  extends: .dev
+.dev:backend:
+  extends: 
+    - .dev
   variables:
-    AWS_ACCESS_KEY_ID: ${DEV_RO_AWS_ACCESS_KEY_ID}
-    AWS_SECRET_ACCESS_KEY: ${DEV_RO_AWS_ACCESS_KEY_SECRET}
-    AWS_DEFAULT_REGION: ${DEV_RO_AWS_DEFAULT_REGION}
+    APP: backend
+
+#####################################
+# Infra Stages
+#####################################
   
 dev:infra:validate:
   extends: 
-    - .dev:ro
+    - .dev
     - .terraform:validate
 
 dev:infra:plan:
   extends: 
-    - .dev:ro
+    - .dev
     - .terraform:plan
   needs:
     - dev:infra:validate
 
 dev:infra:apply:
   extends: 
-    - .dev:rw
+    - .dev
     - .terraform:apply
   needs:
     - dev:infra:plan
@@ -40,7 +42,7 @@ dev:infra:apply:
 
 dev:infra:destroy-plan:
   extends: 
-    - .dev:ro
+    - .dev
     - .terraform:destroy-plan
   needs:
     - dev:infra:validate
@@ -48,51 +50,55 @@ dev:infra:destroy-plan:
 
 dev:infra:destroy-apply:
   extends:
-    - .dev:rw
+    - .dev
     - .terraform:destroy-apply
   needs:
     - dev:infra:destroy-plan
   when: manual
   
 
-
+#####################################
+# Frontend Stages
+#####################################
 
 dev:app:frontend:test:
-  variables:
-    APP: frontend
   extends: 
+    - .dev:frontend
     - .app:test
 
 dev:app:frontend:package:
-  variables:
-    APP: frontend
   extends: 
-    - .dev:rw
+    - .dev:frontend
     - .app:package
   needs:
     - dev:app:frontend:test
 
 dev:app:frontend:deploy:
-  variables:
-    APP: frontend
   extends: 
-    - .dev:rw
+    - .dev:frontend
     - .app:deploy
   needs:
     - dev:app:frontend:package
 
-# dev:app:backend:test:
-#   variables:
-#     APP: backend
-#   extends: 
-#     - .app:test
+#####################################
+# Backend Stages
+#####################################
 
-# dev:app:backend:package:
-#   variables:
-#     APP: backend
-#   extends: 
-#     - .dev:rw
-#     - .app:package
-#   needs:
-#     - dev:app:backend:test
+dev:app:backend:test:
+  extends: 
+    - .dev:backend
+    - .app:test
 
+dev:app:backend:package:
+  extends: 
+    - .dev:backend
+    - .app:package
+  needs:
+    - dev:app:backend:test
+
+dev:app:backend:deploy:
+  extends: 
+    - .dev:backend
+    - .app:deploy
+  needs:
+    - dev:app:backend:package

@@ -159,9 +159,9 @@ image:
   image: docker:latest
   stage: app:deploy
   variables:
-    CLUSTER_NAME: ${APP_NAME}-cluster-${APP_ENV}
-    SERVICE_NAME: ${APP_NAME}-service-${APP}
-    TASK_FAMILY: ${APP_NAME}-task-${APP}
+    CLUSTER_NAME: ${PROJECT}-cluster-${ENVIRONMENT}
+    SERVICE_NAME: ${PROJECT}-service-${APP}
+    TASK_FAMILY: ${PROJECT}-task-${APP}
   before_script:
     - apk add --update --no-cache aws-cli jq
   script:
