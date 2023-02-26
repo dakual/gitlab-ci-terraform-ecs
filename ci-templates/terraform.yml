@@ -151,11 +151,12 @@ image:
     - apk add --update --no-cache aws-cli
     # - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
   script:
-    # - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    # - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    # - aws configure set region $AWS_DEFAULT_REGION
-    - REPOSITORY=$(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text)
-    - echo $REPOSITORY
+    - >
+      REPOSITORY=$(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text)
+      if [[ "$REPOSITORY" == *"RepositoryNotFoundException"* ]]; then
+        exit 1
+      fi
+      echo $REPOSITORY
 
 
 ####################################################
