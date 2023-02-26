@@ -10,6 +10,3 @@ private_subnets:
 public_subnets:
   - 10.1.16.0/20
   - 10.1.48.0/20
-rds:
-  db_name: demo
-  db_username: admin

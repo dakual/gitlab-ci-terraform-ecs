@@ -72,6 +72,15 @@ dev:app:frontend:package:
   needs:
     - dev:app:frontend:test
 
+dev:app:frontend:deploy:
+  variables:
+    APP: frontend
+  extends: 
+    - .dev:rw
+    - .app:package
+  needs:
+    - dev:app:frontend:package
+
 dev:app:backend:test:
   variables:
     APP: backend
@@ -86,3 +95,4 @@ dev:app:backend:package:
     - .app:package
   needs:
     - dev:app:backend:test
+
