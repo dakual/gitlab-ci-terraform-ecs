@@ -115,7 +115,7 @@ image:
 .app:
   image: composer:latest
   before_script:
-    - cd app/$APP
+    - cd app/$APP && pwd
     - composer --version
     - php --version
   # rules:
@@ -148,7 +148,7 @@ image:
   services:
     - docker:dind
   before_script:
-    - cd app/$APP
+    - cd app/$APP && pwd
     - apk add --update --no-cache aws-cli
   script:
     - REPOSITORY=$(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryUri" --output text)
