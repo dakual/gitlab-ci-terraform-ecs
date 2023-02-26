@@ -150,7 +150,7 @@ image:
   before_script:
     - apk add --update --no-cache aws-cli
   script:
-    - REPOSITORY=$(aws ecr describe-repositories --repository-name ${APP} --query "repositories[].repositoryArn" --output text)
+    - REPOSITORY=$(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text)
     - echo $REPOSITORY
     - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
     - docker build --tag $REPOSITORY:$CI_COMMIT_SHORT_SHA --tag $REPOSITORY:latest .
