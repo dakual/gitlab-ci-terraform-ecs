@@ -77,7 +77,7 @@ dev:app:frontend:deploy:
     APP: frontend
   extends: 
     - .dev:rw
-    - .app:package
+    - .app:deploy
   needs:
     - dev:app:frontend:package
 
