@@ -65,7 +65,7 @@ dev:app:frontend:test:
   extends: 
     - .dev:frontend
     - .app:test
-  needs:
+  dependencies:
     - dev:infra:apply
 
 dev:app:frontend:package:
