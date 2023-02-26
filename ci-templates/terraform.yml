@@ -151,12 +151,9 @@ image:
     - apk add --update --no-cache aws-cli
     # - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
   script:
-    - >
-      REPOSITORY=$(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text)
-      if [[ "$REPOSITORY" == *"RepositoryNotFoundException"* ]]; then
-        exit 1
-      fi
-      echo $REPOSITORY
+    - REPOSITORY=$(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text)
+    - if [[ "$REPOSITORY" == *"RepositoryNotFoundException"* ]]; then exit 1 fi
+    - echo $REPOSITORY
 
 
 ####################################################
