@@ -143,11 +143,12 @@ image:
 
 .app:package:
   extends: .app
-  image: docker:20
+  image: docker:latest
   stage: app:package
   services:
-    - docker:20-dind
+    - docker:dind
   before_script:
+    - cd app/$APP
     - apk add --update --no-cache aws-cli
   script:
     - REPOSITORY=$(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryUri" --output text)
