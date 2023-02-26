@@ -116,10 +116,8 @@ image:
   image: composer:latest
   before_script:
     - cd app/$APP
-    - apk add --update --no-cache aws-cli jq
     - composer --version
     - php --version
-    - aws --version
   # rules:
   #   - changes: 
   #       - app/**/*
@@ -144,16 +142,18 @@ image:
     - ./vendor/bin/phpunit --verbose tests
 
 .app:package:
-  extends:
-    - .dev:rw
-    - .app
+  extends: .app
+  image: docker:latest
   stage: app:package
   services:
     - docker:dind
+  before_script:
+    - apk add --update --no-cache aws-cli
+    # - aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY
   script:
-    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    - aws configure set region $AWS_DEFAULT_REGION
+    # - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    # - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    # - aws configure set region $AWS_DEFAULT_REGION
     - aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text
 
 
@@ -177,6 +177,7 @@ app:frontend:package:
   variables:
     APP: frontend
   extends: 
+    - .dev:rw
     - .app:package
   needs:
     - app:frontend:test
