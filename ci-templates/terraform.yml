@@ -117,7 +117,7 @@ image:
   image: composer:latest
   before_script:
     - cd app/$APP
-    - pwd
+    - apk add --update --no-cache aws-cli jq
     - composer --version
     - php --version
   # rules:
