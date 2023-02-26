@@ -81,18 +81,18 @@ dev:app:frontend:deploy:
   needs:
     - dev:app:frontend:package
 
-dev:app:backend:test:
-  variables:
-    APP: backend
-  extends: 
-    - .app:test
+# dev:app:backend:test:
+#   variables:
+#     APP: backend
+#   extends: 
+#     - .app:test
 
-dev:app:backend:package:
-  variables:
-    APP: backend
-  extends: 
-    - .dev:rw
-    - .app:package
-  needs:
-    - dev:app:backend:test
+# dev:app:backend:package:
+#   variables:
+#     APP: backend
+#   extends: 
+#     - .dev:rw
+#     - .app:package
+#   needs:
+#     - dev:app:backend:test
 
