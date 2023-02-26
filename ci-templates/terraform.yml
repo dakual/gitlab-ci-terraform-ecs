@@ -108,8 +108,8 @@ image:
   when: manual
 
 
-
-
+####################################################
+# APPLICAIONS
 ####################################################
 
 .app:
@@ -158,27 +158,4 @@ image:
     - docker push $REPOSITORY:$CI_COMMIT_SHORT_SHA
     - docker push $REPOSITORY:latest
 
-####################################################
 
-app:frontend:build:
-  variables:
-    APP: frontend
-  extends: 
-    - .app:build
-
-app:frontend:test:
-  variables:
-    APP: frontend
-  extends: 
-    - .app:test
-  needs:
-    - app:frontend:build
-
-app:frontend:package:
-  variables:
-    APP: frontend
-  extends: 
-    - .dev:rw
-    - .app:package
-  needs:
-    - app:frontend:test

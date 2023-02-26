@@ -52,3 +52,48 @@ dev:infra:destroy-apply:
     - dev:infra:destroy-plan
   when: manual
   
+dev:app:frontend:build:
+  variables:
+    APP: frontend
+  extends: 
+    - .app:build
+
+dev:app:frontend:test:
+  variables:
+    APP: frontend
+  extends: 
+    - .app:test
+  needs:
+    - dev:app:frontend:build
+
+dev:app:frontend:package:
+  variables:
+    APP: frontend
+  extends: 
+    - .dev:rw
+    - .app:package
+  needs:
+    - dev:app:frontend:test
+
+dev:app:backend:build:
+  variables:
+    APP: backend
+  extends: 
+    - .app:build
+
+dev:app:backend:test:
+  variables:
+    APP: backend
+  extends: 
+    - .app:test
+  needs:
+    - dev:app:backend:build
+
+dev:app:backend:package:
+  variables:
+    APP: backend
+  extends: 
+    - .dev:rw
+    - .app:package
+  needs:
+    - dev:app:backend:test
