@@ -165,11 +165,7 @@ image:
   before_script:
     - apk add --update --no-cache aws-cli jq
   script:
-    - echo $CLUSTER_NAME
-    - echo $SERVICE_NAME
-    - echo $TASK_FAMILY
     - NEW_IMAGE=$(aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryUri" --output text):$CI_COMMIT_SHORT_SHA
-    - echo $NEW_IMAGE
     - CURRENT_TASK=$(aws ecs describe-task-definition --task-definition "${TASK_FAMILY}")
     - NEW_TASK=$(echo $CURRENT_TASK | jq --arg IMAGE "${NEW_IMAGE}" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
     - NEW_TASK_INFO=$(aws ecs register-task-definition --cli-input-json "$NEW_TASK")
