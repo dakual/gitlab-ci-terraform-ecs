@@ -118,6 +118,7 @@ image:
     - cd app/$APP && pwd
     - composer --version
     - php --version
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
   # rules:
   #   - changes: 
   #       - app/**/*
@@ -136,7 +137,7 @@ image:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
 
 .app:test:
-  extends: .app
+  extends: .app:build
   stage: app:test
   script:
     - ./vendor/bin/phpunit --verbose tests
