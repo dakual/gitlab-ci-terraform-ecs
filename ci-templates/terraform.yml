@@ -118,7 +118,6 @@ image:
     - cd app/$APP && pwd
     - composer --version
     - php --version
-    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
   # rules:
   #   - changes: 
   #       - app/**/*
@@ -130,16 +129,12 @@ image:
   tags:
     - ${RUNNER_TAGS}
 
-.app:build:
-  extends: .app
-  stage: app:build
-  script:
-    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
 
 .app:test:
   extends: .app:build
   stage: app:test
   script:
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - ./vendor/bin/phpunit --verbose tests
 
 .app:package:
