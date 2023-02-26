@@ -110,8 +110,7 @@ image:
 
 
 
-
-
+####################################################
 
 .app:
   image: composer:latest
@@ -120,7 +119,7 @@ image:
     - apk add --update --no-cache aws-cli jq
     - composer --version
     - php --version
-    - aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text --region eu-central-1
+    - aws --version
   # rules:
   #   - changes: 
   #       - app/**/*
@@ -131,7 +130,6 @@ image:
       - app/$APP/vendor
   tags:
     - ${RUNNER_TAGS}
-
 
 .app:build:
   extends: .app
@@ -145,9 +143,21 @@ image:
   script:
     - ./vendor/bin/phpunit --verbose tests
 
+.app:package:
+  extends:
+    - .dev:rw
+    - .app
+  stage: app:package
+  services:
+    - docker:dind
+  script:
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set region $AWS_DEFAULT_REGION
+    - aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text
 
 
-
+####################################################
 
 app:frontend:build:
   variables:
@@ -162,3 +172,11 @@ app:frontend:test:
     - .app:test
   needs:
     - app:frontend:build
+
+app:frontend:package:
+  variables:
+    APP: frontend
+  extends: 
+    - .app:package
+  needs:
+    - app:frontend:test
