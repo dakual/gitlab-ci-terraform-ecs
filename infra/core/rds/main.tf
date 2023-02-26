@@ -4,8 +4,7 @@ resource "aws_db_instance" "main" {
   engine               = "mysql"
   engine_version       = "8.0"
   instance_class       = "db.t3.micro"
-  db_name              = var.db_name
-  username             = var.db_username
+  username             = "admin"
   password             = random_password.rds.result
   parameter_group_name = aws_db_parameter_group.main.name
   db_subnet_group_name = aws_db_subnet_group.main.name
@@ -44,18 +43,11 @@ resource "random_password" "rds" {
   special = false
 }
 
-output "rds_host" {
-  value = aws_db_instance.main.address
-}
-
-output "rds_dbname" {
-  value = var.db_name
-}
-
-output "rds_username" {
-  value = var.db_username
-}
-
-output "rds_password" {
-  value = random_password.rds.result
+output "mysql" {
+  value = {
+    DB_HOST = aws_db_instance.main.address
+    BD_PORT = aws_db_instance.main.port
+    DB_USER = aws_db_instance.main.username
+    DB_PASS = random_password.rds.result
+  }
 }

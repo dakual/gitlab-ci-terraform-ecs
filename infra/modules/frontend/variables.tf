@@ -57,3 +57,7 @@ variable "efs_id" {
 variable "efs_ap_id" {
   description = "efs_ap_id"
 }
+
+variable "rds_mysql" {
+  description = "rds_mysql"
+}

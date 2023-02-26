@@ -50,8 +50,6 @@ module "rds" {
   source              = "./core/rds"
   name                = local.var.name
   environment         = local.var.environment
-  db_name             = local.var.rds.db_name
-  db_username         = local.var.rds.db_username
   rds_security_groups = [ module.vpc.vpc_sg_rds ]
   rds_subnets         = module.vpc.vpc_private_subnets
 }
@@ -112,4 +110,5 @@ module "frontend" {
   main_alb_tg_arn     = module.alb.alb_tg_arn
   efs_id              = module.efs.efs_id
   efs_ap_id           = module.efs.efs_ap_id
+  rds_mysql           = module.rds.mysql
 }

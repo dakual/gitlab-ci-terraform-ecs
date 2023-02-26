@@ -18,6 +18,7 @@ stages:
   - app:build
   - app:test
   - app:package
+  - app:deploy
 
 
 image:
@@ -105,3 +106,58 @@ image:
   script:
     - terraform apply -destroy $PLAN
   when: manual
+
+
+
+
+
+
+
+.app:
+  image: composer:latest
+  before_script:
+    - cd app/$APP
+    - pwd
+    - composer --version
+    - php --version
+  # rules:
+  #   - changes: 
+  #       - app/**/*
+  #   - if: $CI_PIPELINE_SOURCE == "web"
+  cache:
+    key: ${TF_WORKSPACE}-$CI_COMMIT_REF_SLUG
+    paths:
+      - app/$APP/vendor
+  tags:
+    - ${RUNNER_TAGS}
+
+
+.app:build:
+  extends: .app
+  stage: app:build
+  script:
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+
+.app:test:
+  extends: .app
+  stage: app:test
+  script:
+    - ./vendor/bin/phpunit --verbose tests
+
+
+
+
+
+app:frontend:build:
+  variables:
+    APP: frontend
+  extends: 
+    - .app:build
+
+app:frontend:test:
+  variables:
+    APP: frontend
+  extends: 
+    - .app:test
+  needs:
+    - app:frontend:build

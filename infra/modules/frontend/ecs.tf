@@ -1,3 +1,11 @@
+locals {
+  container_environments = setunion([
+    for key in keys(var.rds_mysql) : {
+      name  = key
+      value = lookup(var.rds_mysql, key)
+  }], var.app.task.container_environment)  
+}
+
 resource "aws_ecs_task_definition" "main" {
   family                   = "${var.name}-task-${var.app.name}"
   network_mode             = "awsvpc"
@@ -14,7 +22,7 @@ resource "aws_ecs_task_definition" "main" {
       initProcessEnabled = true
     }
     essential       = true
-    environment     = toset(var.app.task.container_environment)
+    environment     = toset(local.container_environments)
     portMappings    = toset(var.app.task.portMappings)
     mountPoints = [{
       "sourceVolume"  = "data",

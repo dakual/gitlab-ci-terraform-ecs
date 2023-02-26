@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "ecs_exec_policy" {
-  name = "${var.name}-ecs_exec_policy-${var.environment}"
+  name = "${var.name}-ecsExecPolicy-${var.environment}"
  
   policy = jsonencode({
     Version = "2012-10-17"

@@ -10,14 +10,6 @@ variable "rds_security_groups" {
   description = "Comma separated list of security groups"
 }
 
-variable "db_name" {
-  description = "the name of your db"
-}
-
-variable "db_username" {
-  description = "the username of your db"
-}
-
 variable "rds_subnets" {
   description = "rds subnets"
 }
