@@ -131,7 +131,7 @@ image:
 
 
 .app:test:
-  extends: .app:build
+  extends: .app
   stage: app:test
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
