@@ -143,10 +143,10 @@ image:
 
 .app:package:
   extends: .app
-  image: docker:latest
+  image: docker:20
   stage: app:package
   services:
-    - docker:dind
+    - docker:20-dind
   before_script:
     - apk add --update --no-cache aws-cli
   script:
