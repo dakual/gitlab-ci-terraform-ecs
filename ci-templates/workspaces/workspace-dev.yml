@@ -1,5 +1,7 @@
 .dev:
   variables:
+    APP_NAME: my-app
+    APP_ENV: dev
     TF_WORKSPACE: gitlab-ci-ecs-dev
 
 .dev:rw:
