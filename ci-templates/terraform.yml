@@ -120,7 +120,7 @@ image:
     - apk add --update --no-cache aws-cli jq
     - composer --version
     - php --version
-    - aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text
+    - aws ecr describe-repositories --repository-name gitlab-ci-ecs --query "repositories[].repositoryArn" --output text --region eu-central-1
   # rules:
   #   - changes: 
   #       - app/**/*
