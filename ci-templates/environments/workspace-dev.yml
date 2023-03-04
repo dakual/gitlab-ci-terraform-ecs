@@ -2,6 +2,9 @@
   variables:
     PROJECT: my-app
     ENVIRONMENT: dev
+    CLUSTER_NAME: ${PROJECT}-cluster-${ENVIRONMENT}
+    SERVICE_NAME: ${PROJECT}-service-${APP}
+    TASK_FAMILY: ${PROJECT}-task-${APP}
     TF_WORKSPACE: gitlab-ci-ecs-dev
 
 .dev:frontend:
@@ -65,8 +68,6 @@ dev:app:frontend:test:
   extends: 
     - .dev:frontend
     - .app:test
-  dependencies:
-    - dev:infra:apply
 
 dev:app:frontend:package:
   extends: 
